@@ -1,0 +1,43 @@
+a{
+    color: #000;
+    text-decoration: none;
+}
+.main {
+    width: 800px;
+    padding: 25px;
+    border: outset 2px;
+    box-shadow: -1px -2px 3px #888;
+}
+.profile{
+    width: 300px;
+    border: solid 1px grey;
+    height: auto;
+    float: right;
+}
+.subtitle{
+    position: relative;
+    top: -15px;
+}
+.photo{
+    margin: 0 auto;
+    text-align: center;
+}
+.detail-name,.detail-content{
+    float: left;
+}
+.detail-name{
+    width:60px;
+}
+.detail-content{
+    width:240px;
+}
+.detail-name > span,.detail-content > span{
+    display: block;
+    padding: 2px 0 ;
+    word-wrap: break-word;
+    font-family: Georgia , serif;
+    font-size: 14px;
+}
+.detail-name > span{
+    font-weight: bold;
+}
