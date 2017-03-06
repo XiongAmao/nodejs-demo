@@ -5,8 +5,9 @@ a{
 .main {
     width: 800px;
     padding: 25px;
-    border: outset 2px;
-    box-shadow: -1px -2px 3px #888;
+    margin: 0 auto;
+    /*border: outset 2px;*/
+    /*box-shadow: -1px -2px 3px #888;*/
 }
 .profile{
     width: 300px;
