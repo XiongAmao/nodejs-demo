@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>web a</title>
 </head>
+
 <body>
     <a href="/a.html" target="_blank">to b</a>
+    <br>
+    <label for="Name">Number:</label>
+    <input type=“text“name="Name" id="Name" />
+
+    <label>Date:<input type="text" autocomplete="off" name="B"/></label>
+    
+    <form name="Form" action="#" method="post">
+        <button type="submit" value="Submit" id="submit">Submit</button>
+    </form>
+
+    <script>
+        var submitBtn = document.getElementById("submit"); // 获取id="submit"对象 
+        submitBtn.onclick = function (event) { //当点击submit按钮时,事件传入
+            alert("preventDefault!");  //alert提史
+            var event = event || window.event;
+            event.preventDefault(); // 兼容标准浏览器
+            window.event.returnValue = false; // 兼容IE6~8
+        };
+
+    </script>
 </body>
+
 </html>
