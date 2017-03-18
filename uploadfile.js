@@ -1,56 +1,69 @@
-#!/usr/bin/env node  
-
-var http = require('http');
-var fs = require('fs');
-var url = require('url')
+/**
+ * Created by Postbird on 2017/2/22.
+ */
 var express=require('express');
+var fs=require('fs');
+var bodyParser=require('body-parser');
+var multer=require('multer');
+var path=require('path');
+var url=require('url');
+var http=require('http');
 
-//console.log(Object.keys(http))
-var port = process.env.PORT || 45999;
+//创建爱app
+var app=express();
+app.use(bodyParser.urlencoded({extended:false}));
 
-var server = http.createServer(function (request, response) {
+//设置文件上传的public/upload路径
+var uploadDir='./public/upload/';
+//规定只上传一张图片 使用single
+var upload=multer({dest:uploadDir}).single('image');
 
-  var temp = url.parse(request.url, true)
-  var path = temp.pathname
-  var query = temp.query
+app.get('/',function (req,res){
+    res.sendFile(__dirname+'/'+'uploadFile.html');
+});
 
-  //从这里开始看，上面不要看
-  if (request.method === 'GET'){
-    if (path === '/') {
-      var string = fs.readFileSync('./a.html') //读取文件路径
-      response.setHeader('Content-type','text/html;charset=utf-8') //响应头 Content-type
-      response.end(string)  // 响应消息体
-    }else if(path === '/b'){
-      var string = fs.readFileSync('./b.html') //读取文件路径
-      response.setHeader('Content-type','text/html;charset=utf-8') //响应头 Content-type
-      response.end(string)  // 响应消息体
-    }else{
-      response.end('404')
-    }
-  }else if (request.method === 'POST'){ //如果请求是POST
-    if (path === '/'){
-      var payload = "";
-      request.addListener("data",function(chunk){
-        payload += chunk;
-      })
-    }
-  }
-  // if (path === '/') {
-  //   var htmlString = fs.readFileSync('./index.html')
-  //   response.end(htmlString)
-  // } else if (path === '/index.css') {
-  //   var cssString = fs.readFileSync('./index.css')
-  //   response.setHeader('Content-Type', 'text/css;charset=utf-8')
-  //   response.end(cssString)
-  // } else if (path === '/main.js') {
-  //   var jsString = fs.readFileSync('./main.js')
-  //   response.setHeader('Content-Type', 'application/javascript')
-  //   response.end(jsString)
-  // } else {
-  //   response.end('404')
-  // }
+app.post('/file_upload',function(req,res,next){
+    //文件上传
+    upload(req, res, function(err){
+        if(err){
+            console.error(err.message);
+        }else{
+            //获取文件的名称，然后拼接成将来要存储的文件路径
+            var des_file=uploadDir+req.file.originalname;
+            //读取临时文件
+            fs.readFile(req.file.path,function(err,data){
+                //将data写入文件中，写一个新的文件
+                fs.writeFile(des_file,data,function(err){
+                    if(err){
+                        console.error(err.message);
+                    }else{
+                        var reponse={
+                            message:'File uploaded successfully',
+                            filename:req.file.originalname
+                        };
+                        //删除临时文件
+                        fs.unlink(req.file.path,function(err){
+                            if(err){
+                                console.error(err.message);
+                            }else{
+                                console.log('delete '+req.file.path+' successfully!');
+                            }
+                        });
+                    }
+                    res.end(JSON.stringify(reponse));
+                });
 
-})
+            });
+        }
+    });
 
-server.listen(port)
-console.log('监听 45999 成功')
+});
+
+var server=app.listen(45999,function(){
+    var host=server.address().address;
+    var port=server.address().port;
+
+    console.log('Server at http://%s:%s',host,port);
+});
+
+
